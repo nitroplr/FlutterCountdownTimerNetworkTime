@@ -6,13 +6,16 @@ import 'package:flutter_countdown_timer/index.dart';
 ///Countdown timer controller.
 class CountdownTimerController extends ChangeNotifier {
   CountdownTimerController(
-      {required int endTime, this.onEnd, TickerProvider? vsync})
+      {required int endTime, this.onEnd, TickerProvider? vsync, this.offset})
       : this._endTime = endTime {
     if (vsync != null) {
       this._animationController =
           AnimationController(vsync: vsync, duration: Duration(seconds: 1));
     }
   }
+
+  ///network function to get a network datetime instead of local
+  final int? offset;
 
   ///Event called after the countdown ends
   final VoidCallback? onEnd;
@@ -74,8 +77,12 @@ class CountdownTimerController extends ChangeNotifier {
 
   ///Calculate current remaining time.
   CurrentRemainingTime? _calculateCurrentRemainingTime() {
+    DateTime now = DateTime.now();
+    if (offset != null) {
+      now = DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch + offset!);
+    }
     int remainingTimeStamp =
-        (_endTime - DateTime.now().millisecondsSinceEpoch) ~/ 1000;
+        (_endTime - now.millisecondsSinceEpoch) ~/ 1000;
     if (remainingTimeStamp <= 0) {
       return null;
     }
