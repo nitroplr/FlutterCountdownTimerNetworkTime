@@ -65,11 +65,11 @@ class _CountDownState extends State<CountdownTimer> {
       controller.start();
     }
     controller.addListener(() {
-      if (mounted) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (mounted) {
           setState(() {});
-        });
-      }
+        }
+      });
     });
   }
 
